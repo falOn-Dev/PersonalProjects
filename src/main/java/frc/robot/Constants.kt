@@ -22,7 +22,16 @@ object Constants {
         val ROBOT_MODE: Mode = if (RobotBase.isReal()) Mode.REAL else SIM_MODE
 
         enum class Mode {
-            SIM, REAL, REPLAY
+            SIM, REAL, REPLAY;
+
+            fun fromString(string: String): Mode {
+                return when (string) {
+                    "SIM" -> SIM
+                    "REAL" -> REAL
+                    "REPLAY" -> REPLAY
+                    else -> throw IllegalArgumentException("Invalid mode: $string")
+                }
+            }
         }
     }
 }
