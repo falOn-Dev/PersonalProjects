@@ -89,11 +89,19 @@ class CommandLogger(
         scheduler.onCommandInterrupt { command -> logCommandFunction.accept(command, false) }
     }
 
+    /**
+     * The LoggingMode enum class defines the different modes that the CommandLogger can operate in.
+     */
     enum class LoggingMode {
+        /** Logs whether each command is active */
         IS_ACTIVE,
+        /** Logs the count of active instances for each command */
         ACTIVE_COUNT,
+        /** Logs the number of times each command has been run */
         TIMES_RAN,
+        /** Logs both whether each command is active and the count of active instances */
         IS_ACTIVE_AND_TIMES_RAN,
+        /** Logs both whether each command is active and the number of times it has been run */
         IS_ACTIVE_AND_ACTIVE_COUNT,
     }
 }
