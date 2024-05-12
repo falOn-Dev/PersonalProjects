@@ -1,3 +1,7 @@
+[![Check Tests](https://github.com/falOn-Dev/PersonalProjects/actions/workflows/tests-check.yml/badge.svg)](https://github.com/falOn-Dev/PersonalProjects/actions/workflows/tests-check.yml)
+[![Check Compilation](https://github.com/falOn-Dev/PersonalProjects/actions/workflows/compile-check.yml/badge.svg)](https://github.com/falOn-Dev/PersonalProjects/actions/workflows/compile-check.yml)
+
+
 # PersonalProjects
 Repository with templates + Personal Stuff
 
