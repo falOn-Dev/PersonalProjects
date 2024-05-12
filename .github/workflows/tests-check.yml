@@ -36,6 +36,7 @@ jobs:
         run: ./gradlew test
 
       - name: Check PWD
+        if: always()
         run: cd $GITHUB_WORKSPACE && pwd
 
       - uses: actions/upload-artifact@v4
