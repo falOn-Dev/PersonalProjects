@@ -22,4 +22,7 @@ import edu.wpi.first.wpilibj.RobotBase
  * Rename * Refactoring when renaming the object, it will get changed everywhere
  * including here.)
  */
-fun main() = RobotBase.startRobot { Robot }
+fun main(args: Array<String>) {
+    println(System.getProperty("simMode"))
+    RobotBase.startRobot { Robot }
+}
