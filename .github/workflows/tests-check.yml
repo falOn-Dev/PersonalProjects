@@ -43,4 +43,4 @@ jobs:
         if: failure()
         with:
           name: test-results
-          path: /__w/PersonalProjects/PersonalProjects/build/reports/tests/test/index.html
+          path: /__w/PersonalProjects/PersonalProjects/build/reports/tests/test/
