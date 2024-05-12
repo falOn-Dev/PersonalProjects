@@ -9,6 +9,6 @@ internal class ExampleTest {
 
     @Test
     fun `2 plus 2 should equal 4`() {
-        assertEquals(4, 2 + 2)
+        assertEquals(5, 2 + 2)
     }
 }
