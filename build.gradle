@@ -130,6 +130,8 @@ kotlin {
 }
 
 project.compileJava.dependsOn(createVersionFile)
+project.compileKotlin.dependsOn(createVersionFile)
+
 gversion {
 	srcDir       = "src/main/java/"
 	classPackage = "frc.robot"
