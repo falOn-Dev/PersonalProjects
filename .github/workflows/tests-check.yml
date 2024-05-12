@@ -39,4 +39,4 @@ jobs:
         if: failure()
         with:
           name: test-results
-          path: $GITHUB_WORKSPACE/build/reports/tests/test/index.html
+          path: $GITHUB_WORKSPACE/build/reports/tests/test/
