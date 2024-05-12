@@ -1,6 +1,6 @@
 # This is a basic workflow to build robot code.
 
-name: Test Test
+name: Check Tests
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch.
@@ -34,3 +34,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Compile and run tests on robot code
         run: ./gradlew test
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: $GITHUB_WORKSPACE/build/reports/tests/test/index.html
