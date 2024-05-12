@@ -35,6 +35,9 @@ jobs:
       - name: Compile and run tests on robot code
         run: ./gradlew test
 
+      - name: Check test results
+        run: ls -R $GITHUB_WORKSPACE/build/reports/tests/test
+
       - uses: actions/upload-artifact@v4
         with:
           name: index.html
