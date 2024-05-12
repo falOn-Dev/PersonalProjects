@@ -1,2 +1,2 @@
 # PersonalProjects
- Repository with templates + Personal Stuff
+Repository with templates + Personal Stuff

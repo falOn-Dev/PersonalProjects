@@ -7,13 +7,8 @@ package frc.robot
  * `const` definitions. Other constant types should use `val` definitions.
  */
 
-object Constants
-{
-    object OperatorConstants
-    {
+object Constants {
+    object OperatorConstants {
         const val DRIVER_CONTROLLER_PORT = 0
     }
 }
-
-
-

@@ -18,8 +18,7 @@ import frc.robot.subsystems.ExampleSubsystem
  * to the various subsystems in this container to pass into to commands. The commands can just
  * directly reference the (single instance of the) object.
  */
-object RobotContainer
-{
+object RobotContainer {
     init
     {
         configureBindings()
@@ -37,8 +36,7 @@ object RobotContainer
      * subclasses such for [Xbox][CommandXboxController]/[PS4][edu.wpi.first.wpilibj2.command.button.CommandPS4Controller]
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
-    private fun configureBindings()
-    {
+    private fun configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         Trigger { ExampleSubsystem.exampleCondition() }.onTrue(ExampleCommand())
 
