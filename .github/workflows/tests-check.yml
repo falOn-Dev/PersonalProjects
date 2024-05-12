@@ -7,9 +7,6 @@ name: Check Tests
 on:
   push:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - base-template
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
