@@ -23,8 +23,8 @@ class CommandLogger(
                 // It creates a unique id for each command and logs the active status of the command
                 logCommandFunction =
                     BiConsumer { command: Command, active: Boolean ->
-                        val id: String = command.name + command.hashCode()
-                        Logger.recordOutput(table + "is-active" + id, active)
+                        val id: String = command.name + "_" + command.hashCode()
+                        Logger.recordOutput(table + "is-active/" + id, active)
                     }
             }
             LoggingMode.ACTIVE_COUNT -> {
@@ -58,8 +58,8 @@ class CommandLogger(
                 logCommandFunction =
                     BiConsumer { command: Command, active: Boolean ->
                         val name = command.name
-                        val id = name + command.hashCode()
-                        Logger.recordOutput(table + "is-active" + id, active)
+                        val id = name + "_" + command.hashCode()
+                        Logger.recordOutput(table + "is-active/" + id, active)
                         val newCount = activeCount.getOrDefault(name, 0) + if (active) 1 else -1
                         activeCount[name] = newCount
                         Logger.recordOutput(table + "active-count/" + name, newCount)
@@ -72,8 +72,8 @@ class CommandLogger(
                 logCommandFunction =
                     BiConsumer { command: Command, active: Boolean ->
                         val name = command.name
-                        val id = name + command.hashCode()
-                        Logger.recordOutput(table + "is-active" + id, active)
+                        val id = name + "_" + command.hashCode()
+                        Logger.recordOutput(table + "is-active/" + id, active)
                         val newCount = timesRan.getOrDefault(name, 0) + if (active) 1 else 0
                         timesRan[name] = newCount
                         Logger.recordOutput(table + "times-ran/" + name, newCount)
