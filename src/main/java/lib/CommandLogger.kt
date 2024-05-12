@@ -7,9 +7,9 @@ import java.util.function.BiConsumer
 
 class CommandLogger(
     private val scheduler: CommandScheduler,
-    private var table: String = "scheduler/",
     private val mode: LoggingMode = LoggingMode.IS_ACTIVE,
-) {
+    private var table: String = "scheduler/",
+    ) {
     val logCommandFunction: BiConsumer<Command, Boolean>
 
     init {
