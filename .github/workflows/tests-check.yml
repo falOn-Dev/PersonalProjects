@@ -37,7 +37,7 @@ jobs:
 
       - name: Check PWD
         if: always()
-        run: cd $GITHUB_WORKSPACE && pwd
+        run: cd $GITHUB_WORKSPACE/build/reports/tests/test/ && ls -la
 
       - uses: actions/upload-artifact@v4
         if: failure()
