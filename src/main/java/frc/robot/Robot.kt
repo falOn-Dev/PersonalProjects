@@ -3,11 +3,16 @@ package frc.robot
 import edu.wpi.first.hal.FRCNetComm.tInstances
 import edu.wpi.first.hal.FRCNetComm.tResourceType
 import edu.wpi.first.hal.HAL
-import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.util.WPILibVersion
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.commands.Autos
+import org.littletonrobotics.junction.LogFileUtil
+import org.littletonrobotics.junction.LoggedRobot
+import org.littletonrobotics.junction.Logger
+import org.littletonrobotics.junction.networktables.NT4Publisher
+import org.littletonrobotics.junction.wpilog.WPILOGReader
+import org.littletonrobotics.junction.wpilog.WPILOGWriter
 
 /**
  * The VM is configured to automatically run this object (which basically functions as a singleton class),
@@ -19,7 +24,7 @@ import frc.robot.commands.Autos
  * the `Main.kt` file in the project. (If you use the IDE's Rename or Move refactorings when renaming the
  * object or package, it will get changed everywhere.)
  */
-object Robot : TimedRobot() {
+object Robot : LoggedRobot() {
     /**
      * The autonomous command to run. While a default value is set here,
      * the [autonomousInit] method will set it to the value selected in
@@ -32,6 +37,35 @@ object Robot : TimedRobot() {
      * initialization code.
      */
     override fun robotInit() {
+        // Metadata for the robot
+        Logger.recordMetadata("Robot Name", Constants.RobotData.ROBOT_NAME)
+        Logger.recordMetadata("Robot Mode", Constants.RobotData.ROBOT_MODE.toString())
+        Logger.recordMetadata("WPILib Version", WPILibVersion.Version)
+        Logger.recordMetadata("Git SHA", GIT_SHA)
+        Logger.recordMetadata("Git Branch", GIT_BRANCH)
+        Logger.recordMetadata("Git Revision", GIT_REVISION.toString())
+        Logger.recordMetadata("Git Date", GIT_DATE)
+        Logger.recordMetadata("Build Date", BUILD_DATE)
+
+        when (Constants.RobotData.ROBOT_MODE) {
+            Constants.RobotData.Mode.SIM -> {
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+            Constants.RobotData.Mode.REPLAY -> {
+                val path = LogFileUtil.findReplayLog()
+                Logger.setReplaySource(WPILOGReader(path))
+                Logger.addDataReceiver(NT4Publisher())
+                Logger.addDataReceiver(WPILOGWriter(LogFileUtil.addPathSuffix(path, "_replay")))
+            }
+            Constants.RobotData.Mode.REAL -> {
+                Logger.addDataReceiver(WPILOGWriter())
+                Logger.addDataReceiver(NT4Publisher())
+            }
+        }
+
+        Logger.start()
+
         // Report the use of the Kotlin Language for "FRC Usage Report" statistics
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
         // Access the RobotContainer object so that it is initialized. This will perform all our
