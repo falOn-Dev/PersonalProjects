@@ -19,8 +19,7 @@ import frc.robot.subsystems.ExampleSubsystem
  * directly reference the (single instance of the) object.
  */
 object RobotContainer {
-    init
-    {
+    init {
         configureBindings()
         // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
         Autos
