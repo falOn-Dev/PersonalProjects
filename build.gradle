@@ -156,6 +156,7 @@ idea {
 	}
 }
 
+project.build.dependsOn(spotlessApply)
 
 spotless {
 	format 'misc', {
