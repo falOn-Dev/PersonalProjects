@@ -38,4 +38,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: $GITHUB_WORKSPACE/build/reports/tests/test/index.html
+          path: $GITHUB_WORKSPACE/build/reports/tests/test
