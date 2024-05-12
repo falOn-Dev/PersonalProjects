@@ -35,8 +35,12 @@ jobs:
       - name: Compile and run tests on robot code
         run: ./gradlew test
 
+      - name: Check PWD
+        if: always()
+        run: cd $GITHUB_WORKSPACE/build/reports/tests/test/ && ls -la
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-results
-          path: $GITHUB_WORKSPACE/build/reports/tests/test/
+          path: /__w/PersonalProjects/PersonalProjects/build/reports/tests/test/
