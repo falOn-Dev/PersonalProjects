@@ -35,6 +35,9 @@ jobs:
       - name: Compile and run tests on robot code
         run: ./gradlew test
 
+      - name: Check PWD
+        run: cd $GITHUB_WORKSPACE && pwd
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
