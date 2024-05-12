@@ -1,5 +1,6 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj2.command.WaitCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
@@ -19,6 +20,14 @@ import frc.robot.subsystems.ExampleSubsystem
  * directly reference the (single instance of the) object.
  */
 object RobotContainer {
+
+    private val driverController = CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT)
+
+    val wait2 = WaitCommand(2.0).withName("Wait2")
+    val wait3 = WaitCommand(3.0).withName("Wait3")
+    val wait4 = WaitCommand(4.0).withName("Wait4")
+    val wait5 = WaitCommand(5.0).withName("Wait5")
+
     init {
         configureBindings()
         // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
@@ -26,7 +35,6 @@ object RobotContainer {
     }
 
     // Replace with CommandPS4Controller or CommandJoystick if needed
-    private val driverController = CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT)
 
     /**
      * Use this method to define your `trigger->command` mappings. Triggers can be created via the
@@ -41,6 +49,10 @@ object RobotContainer {
 
         // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
         // cancelling on release.
-        driverController.b().whileTrue(ExampleSubsystem.exampleMethodCommand())
+
+        driverController.button(1).onTrue(wait2)
+        driverController.button(2).onTrue(wait3)
+        driverController.button(3).onTrue(wait4)
+        driverController.button(4).onTrue(wait5)
     }
 }
