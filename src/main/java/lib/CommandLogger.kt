@@ -5,11 +5,25 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import org.littletonrobotics.junction.Logger
 import java.util.function.BiConsumer
 
+/**
+ * The CommandLogger class logs information about commands as they are initialized, finished, or interrupted.
+ * It can log whether each command is active, the count of active instances for each command, or the number of times each command has been run.
+ * @param scheduler The [CommandScheduler] to log commands from
+ * @param mode The LoggingMode to use for logging
+ * @param table The table name to use for logging
+ * @see LoggingMode
+ * @constructor Creates a CommandLogger with the specified CommandScheduler, LoggingMode, and table name
+ */
 class CommandLogger(
     private val scheduler: CommandScheduler,
     private val mode: LoggingMode = LoggingMode.IS_ACTIVE,
     private var table: String = "scheduler/",
     ) {
+    /**
+     * BiConsumer that takes in a Command, and a boolean representing whether the command is active.
+     * The CommandLogger uses this function to log information about commands as they are initialized, finished, or interrupted.
+     * The function is defined based on the selected mode.
+     */
     val logCommandFunction: BiConsumer<Command, Boolean>
 
     init {
