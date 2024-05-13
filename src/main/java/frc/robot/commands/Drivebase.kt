@@ -1,6 +1,8 @@
 package frc.robot.commands
 
 import com.pathplanner.lib.auto.AutoBuilder
+import com.pathplanner.lib.commands.PathPlannerAuto
+import com.pathplanner.lib.util.GeometryUtil
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
@@ -16,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics
 import edu.wpi.first.math.numbers.N1
 import edu.wpi.first.math.numbers.N3
 import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.DriverStation.Alliance
 import edu.wpi.first.wpilibj.Filesystem
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.SubsystemBase
@@ -24,6 +27,7 @@ import swervelib.SwerveDrive
 import swervelib.parser.SwerveDriveConfiguration
 import swervelib.parser.SwerveParser
 import java.io.File
+import java.util.*
 import java.util.function.DoubleSupplier
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.time.times
@@ -100,6 +104,38 @@ object Drivebase : SubsystemBase() {
             },
             this
         )
+    }
+
+    /**
+     * Gets a command that follows a path created in PathPlanner.
+     * @param pathName The path's file name.
+     * @param setOdomAtStart Whether to update the robot's odometry to the start pose of the path.
+     * @return A command that follows the path.
+     */
+    fun getAutonomousCommand(
+        autoName: String,
+        setOdomAtStart: Boolean,
+    ): Command {
+        var startPosition: Pose2d = Pose2d()
+        if(PathPlannerAuto.getStaringPoseFromAutoFile(autoName) == null) {
+            startPosition = PathPlannerAuto.getPathGroupFromAutoFile(autoName)[0].startingDifferentialPose
+        } else {
+            startPosition = PathPlannerAuto.getStaringPoseFromAutoFile(autoName)
+        }
+
+        if(DriverStation.getAlliance() == Optional.of(Alliance.Red)){
+            startPosition = GeometryUtil.flipFieldPose(startPosition)
+        }
+
+        if (setOdomAtStart)
+        {
+            if (startPosition != null) {
+                resetOdometry(startPosition)
+            }
+        }
+
+        // TODO: Configure path planner's AutoBuilder
+        return PathPlannerAuto(autoName)
     }
 
     fun driveCommand(
