@@ -15,9 +15,9 @@ import java.util.function.BiConsumer
  * @constructor Creates a CommandLogger with the specified CommandScheduler, LoggingMode, and table name
  */
 class CommandLogger(
-    private val scheduler: CommandScheduler = CommandScheduler.getInstance(),
     private val mode: LoggingMode = LoggingMode.IS_ACTIVE,
     private var table: String = "scheduler/",
+    private val scheduler: CommandScheduler = CommandScheduler.getInstance(),
     ) {
     /**
      * BiConsumer that takes in a Command, and a boolean representing whether the command is active.
