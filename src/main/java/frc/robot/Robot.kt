@@ -67,7 +67,7 @@ object Robot : LoggedRobot() {
 
         Logger.start()
 
-        val commandLogger: CommandLogger = CommandLogger(CommandScheduler.getInstance(), CommandLogger.LoggingMode.IS_ACTIVE_AND_ACTIVE_COUNT)
+        CommandLogger(CommandLogger.LoggingMode.IS_ACTIVE_AND_ACTIVE_COUNT)
 
         // Report the use of the Kotlin Language for "FRC Usage Report" statistics
         HAL.report(tResourceType.kResourceType_Language, tInstances.kLanguage_Kotlin, 0, WPILibVersion.Version)
