@@ -24,7 +24,7 @@ class CommandLogger(
      * The CommandLogger uses this function to log information about commands as they are initialized, finished, or interrupted.
      * The function is defined based on the selected mode.
      */
-    val logCommandFunction: BiConsumer<Command, Boolean>
+    private val logCommandFunction: BiConsumer<Command, Boolean>
 
     init {
         // Ensure table name ends with "/"
