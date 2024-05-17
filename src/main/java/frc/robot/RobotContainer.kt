@@ -1,11 +1,17 @@
 package frc.robot
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest
+import edu.wpi.first.units.Units
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
 import frc.robot.commands.ExampleCommand
+import frc.robot.generated.TunerConstants
 import frc.robot.subsystems.ExampleSubsystem
+import frc.robot.subsystems.swerve.Drivetrain
+import frc.robot.subsystems.swerve.SwerveLogger
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,7 +28,18 @@ object RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private val driverController = CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT)
 
+    private val maxSpeed = Units.MetersPerSecond.of(TunerConstants.kSpeedAt12VoltsMps)
+    private const val maxAngular = 1.5 * Math.PI
+
+    private val logger: SwerveLogger = SwerveLogger(maxSpeed)
+
+    val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
+        .withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.1)
+        .withRotationalDeadband(maxAngular * 0.1)
+        .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+
     init {
+        Drivetrain
         configureBindings()
         // Reference the Autos object so that it is initialized, placing the chooser on the dashboard
         Autos
@@ -36,11 +53,14 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        Trigger { ExampleSubsystem.exampleCondition() }.onTrue(ExampleCommand())
+        Drivetrain.defaultCommand = Drivetrain.applyRequest {
+            drive.withVelocityX(-driverController.leftY * maxSpeed.`in`(Units.MetersPerSecond))
+                .withVelocityY(driverController.leftX * maxSpeed.`in`(Units.MetersPerSecond))
+                .withRotationalRate(driverController.rightX * maxAngular)
+        }.ignoringDisable(true)
 
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(ExampleSubsystem.exampleMethodCommand())
+        driverController.leftBumper().onTrue(Drivetrain.runOnce { Drivetraint.seedFieldRelative() })
+
+        Drivetrain.registerTelemetry(logger::telemetrize)
     }
 }
