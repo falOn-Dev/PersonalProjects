@@ -1,11 +1,14 @@
 package frc.robot
 
+import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.InstantCommand
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
 import frc.robot.commands.ExampleCommand
 import frc.robot.subsystems.ExampleSubsystem
+import lib.telemetry.Alert
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,6 +24,12 @@ import frc.robot.subsystems.ExampleSubsystem
 object RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     private val driverController = CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT)
+    private val testWarning: Alert = Alert("Test Warning", Alert.Level.WARNING)
+    private val testWarning2: Alert = Alert("Test Warning 2", Alert.Level.WARNING)
+    private val testError: Alert = Alert("Test Error", Alert.Level.ERROR)
+    private val testError2: Alert = Alert("Test Error 2", Alert.Level.ERROR)
+    private val testInfo: Alert = Alert("Test Info", Alert.Level.INFO)
+    private val testInfo2: Alert = Alert("Test Info 2", Alert.Level.INFO)
 
     init {
         configureBindings()
@@ -36,11 +45,11 @@ object RobotContainer {
      * controllers or [Flight joysticks][edu.wpi.first.wpilibj2.command.button.CommandJoystick].
      */
     private fun configureBindings() {
-        // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-        Trigger { ExampleSubsystem.exampleCondition() }.onTrue(ExampleCommand())
-
-        // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-        // cancelling on release.
-        driverController.b().whileTrue(ExampleSubsystem.exampleMethodCommand())
+        driverController.a().onTrue(Commands.runOnce(testInfo::toggleActive))
+        driverController.b().onTrue(Commands.runOnce(testInfo2::toggleActive))
+        driverController.x().onTrue(Commands.runOnce(testWarning::toggleActive))
+        driverController.y().onTrue(Commands.runOnce(testWarning2::toggleActive))
+        driverController.start().onTrue(Commands.runOnce(testError::toggleActive))
+        driverController.back().onTrue(Commands.runOnce(testError2::toggleActive))
     }
 }
