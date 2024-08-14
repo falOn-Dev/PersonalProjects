@@ -3,14 +3,13 @@ package frc.robot.subsystems.swerve
 import com.ctre.phoenix6.SignalLogger
 import com.ctre.phoenix6.Utils
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest
 import com.pathplanner.lib.auto.AutoBuilder
 import com.pathplanner.lib.commands.PathPlannerAuto
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig
 import com.pathplanner.lib.util.PIDConstants
 import com.pathplanner.lib.util.ReplanningConfig
+import edu.wpi.first.math.geometry.Pose2d
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.ChassisSpeeds
 import edu.wpi.first.units.Measure
@@ -27,10 +26,12 @@ import frc.robot.generated.TunerConstants
 import frc.robot.generated.TunerConstants.moduleConstants
 import java.util.function.Supplier
 
-object Drivetrain : SwerveDrivetrain(
-    TunerConstants.DrivetrainConstants,
-    *moduleConstants
-), Subsystem {
+object Drivetrain :
+    SwerveDrivetrain(
+        TunerConstants.DrivetrainConstants,
+        *moduleConstants,
+    ),
+    Subsystem {
     private var simNotifier: Notifier? = null
     private var lastSimTime = 0.0
 
@@ -42,6 +43,8 @@ object Drivetrain : SwerveDrivetrain(
         SwerveRequest.SysIdSwerveTranslation()
     private val rotationCharacterization: SwerveRequest.SysIdSwerveRotation = SwerveRequest.SysIdSwerveRotation()
     private val steerCharacterization: SwerveRequest.SysIdSwerveSteerGains = SwerveRequest.SysIdSwerveSteerGains()
+
+    private val autoRequest: SwerveRequest.ApplyChassisSpeeds = SwerveRequest.ApplyChassisSpeeds()
 
     val translationSysId: SysIdRoutine = SysIdRoutine(
         SysIdRoutine.Config(
@@ -87,45 +90,27 @@ object Drivetrain : SwerveDrivetrain(
 
     private val routineToApply: SysIdRoutine = translationSysId // Change this to the routine you want to run
 
-    private val autoRequest: SwerveRequest.ApplyChassisSpeeds = SwerveRequest.ApplyChassisSpeeds()
+    fun setChassisSpeeds(speeds: ChassisSpeeds) {
+        this.setControl(autoRequest.withSpeeds(speeds))
+    }
 
     val currentChassisSpeeds: ChassisSpeeds
         get() = m_kinematics.toChassisSpeeds(*state.ModuleStates)
 
     init {
-        configurePathPlanner()
         if (RobotBase.isSimulation()) {
             startSim()
         }
-    }
-
-    private fun configurePathPlanner() {
-        var drivebaseRadius = 0.0
-        for (loc in m_moduleLocations) {
-            drivebaseRadius = drivebaseRadius.coerceAtLeast(loc.norm)
-        }
-
-        AutoBuilder.configureHolonomic(
-            { this.state.Pose },
-            this::seedFieldRelative,
-            this::currentChassisSpeeds,
-            { speeds -> this.setControl(autoRequest.withSpeeds(speeds)) },
-            HolonomicPathFollowerConfig(
-                PIDConstants(10.0, 0.0, 0.0),
-                PIDConstants(10.0, 0.0, 0.0),
-                TunerConstants.kSpeedAt12VoltsMps,
-                drivebaseRadius,
-                ReplanningConfig(true, true),
-            ),
-            { DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red },
-            this,
-        )
     }
 
     fun applyRequest(requestSupplier: Supplier<SwerveRequest>): Command {
         return this.run {
             this.setControl(requestSupplier.get())
         }
+    }
+
+    fun resetOdometry(pose: Pose2d) {
+        this.seedFieldRelative(pose)
     }
 
     fun getAutoPath(pathname: String): Command {
@@ -140,7 +125,7 @@ object Drivetrain : SwerveDrivetrain(
         return routineToApply.dynamic(direction)
     }
 
-    private fun startSim(){
+    private fun startSim() {
         lastSimTime = Utils.getCurrentTimeSeconds()
 
         simNotifier = Notifier {
@@ -154,9 +139,9 @@ object Drivetrain : SwerveDrivetrain(
     }
 
     override fun periodic() {
-        if(!hasAppliedOperatorPerspective || DriverStation.isDisabled()){
+        if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent { color ->
-                if(color == DriverStation.Alliance.Red){
+                if (color == DriverStation.Alliance.Red) {
                     this.setOperatorPerspectiveForward(RedAlliancePerspectiveRotation)
                 } else {
                     this.setOperatorPerspectiveForward(BlueAlliancePerspecitveRotation)
@@ -166,5 +151,4 @@ object Drivetrain : SwerveDrivetrain(
     }
 
     private const val kSimLoopPeriod = 0.005 // 5ms
-
 }

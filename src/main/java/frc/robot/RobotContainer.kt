@@ -7,9 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 import edu.wpi.first.wpilibj2.command.button.Trigger
 import frc.robot.Constants.OperatorConstants
 import frc.robot.commands.Autos
-import frc.robot.commands.ExampleCommand
 import frc.robot.generated.TunerConstants
-import frc.robot.subsystems.ExampleSubsystem
 import frc.robot.subsystems.swerve.Drivetrain
 import frc.robot.subsystems.swerve.SwerveLogger
 
@@ -36,7 +34,8 @@ object RobotContainer {
     val drive: SwerveRequest.FieldCentric = SwerveRequest.FieldCentric()
         .withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.1)
         .withRotationalDeadband(maxAngular * 0.1)
-        .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+        .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+        .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagicExpo)
 
     init {
         Drivetrain
@@ -59,7 +58,7 @@ object RobotContainer {
                 .withRotationalRate(driverController.rightX * maxAngular)
         }.ignoringDisable(true)
 
-        driverController.leftBumper().onTrue(Drivetrain.runOnce { Drivetraint.seedFieldRelative() })
+        driverController.leftBumper().onTrue(Drivetrain.runOnce { Drivetrain.seedFieldRelative() })
 
         Drivetrain.registerTelemetry(logger::telemetrize)
     }

@@ -1,28 +1,67 @@
 package frc.robot.commands
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
-import edu.wpi.first.wpilibj2.command.Command
-import edu.wpi.first.wpilibj2.command.Commands
-import edu.wpi.first.wpilibj2.command.PrintCommand
-import frc.robot.subsystems.ExampleSubsystem
+import edu.wpi.first.wpilibj2.command.*
+import frc.robot.RobotContainer
+import frc.robot.subsystems.swerve.Drivetrain
+import lib.auto.ChoreoAuto
+import java.util.*
+import java.util.function.Supplier
 
 object Autos {
-    private val autoModeChooser = SendableChooser<AutoMode>().apply {
-        AutoMode.values().forEach { addOption(it.optionName, it) }
-        setDefaultOption(AutoMode.default.optionName, AutoMode.default)
+    private val autoModeChooser =
+        SendableChooser<AutoMode>().apply {
+            AutoMode.entries.forEach { addOption(it.optionName, it) }
+            setDefaultOption(AutoMode.default.optionName, AutoMode.default)
+        }
+
+    private fun waitPrint(msg: String, wait: Double): Command {
+        return Commands.parallel(
+            Commands.print(msg),
+            Commands.waitSeconds(wait)
+        )
+//        return InstantCommand()
     }
 
-    val defaultAutonomousCommand: Command
-        get() = AutoMode.default.command
+    val defaultAutonomousCommand: ChoreoAuto
+        get() = AutoMode.default.routine.get()
 
-    val selectedAutonomousCommand: Command
-        get() = autoModeChooser.selected?.command ?: defaultAutonomousCommand
+    val selectedAutonomousCommand: ChoreoAuto
+        get() = autoModeChooser.selected.routine.get() ?: defaultAutonomousCommand
+
 
     /** Example static factory for an autonomous command.  */
-    private fun exampleAuto(): Command =
-        Commands.sequence(ExampleSubsystem.exampleMethodCommand(), ExampleCommand())
 
-    private fun exampleAuto2() = PrintCommand("An example Auto Mode that just prints a value")
+    init {
+        val tab = Shuffleboard.getTab("Autonomous")
+        tab.add("Auto Chooser", autoModeChooser)
+    }
+
+
+    val ThreePieceSpeaker = ChoreoAuto(
+        "3P_SP_N123",
+        Drivetrain,
+        true,
+        mapOf(
+            0 to Supplier {
+                waitPrint("Shooting Note 1", 3.0)
+            },
+            1 to Supplier {
+                waitPrint("Shooting Note 2", 3.0)
+            },
+            2 to Supplier {
+                waitPrint("Shooting Note 3", 3.0)
+            }
+        ),
+        mapOf(
+            0 to Supplier { PrintCommand("Picking Up Note 1") },
+            1 to Supplier { PrintCommand("Picking Up Note 2") },
+            2 to Supplier { PrintCommand("Picking Up Note 3") }
+        ),
+        startCommand = Supplier { waitPrint("Shooting Stored Note", 2.0) }
+    )
+
 
     /**
      * An enumeration of the available autonomous modes. It provides an easy
@@ -33,16 +72,13 @@ object Autos {
      * @param command The [Command] to run for this mode.
      */
     @Suppress("unused")
-    private enum class AutoMode(val optionName: String, val command: Command) {
-        // TODO: Replace with real auto modes and their corresponding commands
-        CUSTOM_AUTO_1("Custom Auto Mode 1", exampleAuto()),
-        CUSTOM_AUTO_2("Custom Auto Mode 2", exampleAuto2()),
-        CUSTOM_AUTO_3("Custom Auto Mode 3", ExampleCommand()),
+    private enum class AutoMode(val optionName: String, val routine: Supplier<ChoreoAuto>) {
+        EXAMPLE_PATH("Example Path", { ThreePieceSpeaker }),
         ;
 
         companion object {
             /** The default auto mode. */
-            val default = CUSTOM_AUTO_1
+            val default = EXAMPLE_PATH
         }
     }
 }
