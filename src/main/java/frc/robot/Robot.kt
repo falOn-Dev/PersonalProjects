@@ -56,16 +56,8 @@ object Robot : TimedRobot() {
         val testLengthValue = ChoreoVariable.Expression.fromMeasure("testLength", Units.Feet.of(10.0))
         val testAngleValue = ChoreoVariable.Expression.fromMeasure("testAngle", Units.Degrees.of(90.0))
 
-        val project = ChoreoProject(
-            "Test",
-            SemanticVersion(1, 0, 0),
-            ChoreoProjectType.Swerve,
-            mapOf(
-                "expressions" to listOf(
-                    testLengthValue,
-                    testAngleValue
-                )
-            )
+        val project = ChoreoProject.create(
+            expressionVariables = listOf(testLengthValue, testAngleValue),
         )
 
         println(json.encodeToString(ChoreoProject.serializer(), project))
