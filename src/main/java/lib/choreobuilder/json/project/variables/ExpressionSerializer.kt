@@ -28,7 +28,7 @@ class ExpressionSerializer: KSerializer<ChoreoVariable.Expression> {
         }
 
         encoder.encodeSerializableValue(
-            JsonObject.serializer(), JsonObject(mapOf(value.name to jsonObject))
+            JsonObject.serializer(), JsonObject(jsonObject)
         )
     }
 
