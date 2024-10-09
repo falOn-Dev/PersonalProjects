@@ -1,0 +1,31 @@
+{
+ "name":"CS_A1",
+ "version":"v2025.0.0",
+ "snapshot":{
+  "waypoints":[],
+  "constraints":[],
+  "targetDt":0.1
+ },
+ "params":{
+  "waypoints":[
+    {"x":{"exp":"c_sub.x()", "val":1.429592490196228}, "y":{"exp":"c_sub.y()", "val":5.5475969314575195}, "heading":{"exp":"c_sub.heading()", "val":0.0}, "intervals":8, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"1.8583908081054688 m", "val":1.8583908081054688}, "y":{"exp":"6.65857458114624 m", "val":6.65857458114624}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":7, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
+    {"x":{"exp":"note_a1.x()", "val":2.493950796127319}, "y":{"exp":"note_a1.y()", "val":7.028900623321533}, "heading":{"exp":"note_a1.heading()", "val":0.0}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+  "constraints":[
+    {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
+    {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"16.54 m", "val":16.54}, "h":{"exp":"8.21 m", "val":8.21}}}, "enabled":true}],
+  "targetDt":{
+   "exp":"0.1 s",
+   "val":0.1
+  }
+ },
+ "trajectory":{
+  "waypoints":[],
+  "samples":[],
+  "splits":[],
+  "forcesAvailable":false
+ },
+ "events":[],
+ "pplib_commands":[]
+}
