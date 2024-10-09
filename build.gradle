@@ -7,6 +7,7 @@ plugins {
 	id "com.peterabeles.gversion" version "1.10"
 	id 'com.diffplug.spotless' version '6.20.0'
 	id 'org.jetbrains.dokka' version '1.9.20'
+	id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.20'
 }
 
 def javaVersion = JavaVersion.VERSION_17
@@ -67,6 +68,10 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	implementation wpi.java.deps.wpilib()
 	implementation wpi.java.vendor.java()
@@ -91,6 +96,8 @@ dependencies {
 	testImplementation "org.junit.jupiter:junit-jupiter-api"
 	testImplementation "org.junit.jupiter:junit-jupiter-params"
 	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+	implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
 }
 
 test{
